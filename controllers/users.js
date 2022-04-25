@@ -1,57 +1,77 @@
-const { request, response } = require('express');
+const { request, response } = require("express");
+const bcryptjs = require("bcryptjs");
 
-const getUsers = ( req = request, res = response ) => {
+const User = require("../models/user");
 
-    console.log(req.query);
-    const { q, name = 'No name', apikey:apiKey, page = 1, limit}  = req.query;
+//GET USER
+const getUsers = async (req = request, res = response) => {
+  const { from = 0, limit = 5 } = req.query;
+  const query = { state: true };
 
-    res.json( {
-        msg: 'get API - controllers',
-        q,
-        name,
-        apiKey,
-        page,
-        limit
-    } )
-}
+  const [total, users] = await Promise.all([
+    User.countDocuments(query),
+    User.find(query).skip(Number(from)).limit(Number(limit))
+  ]);
 
-const postUsers = ( req = request, res = response ) => {
+  res.json({
+    total,
+    users
+  });
+};
 
-    const { name, age } = req.body;
+//POST USER
+const postUsers = async (req = request, res = response) => {
+  const { name, email, password, role } = req.body;
+  const user = new User({ name, email, password, role });
 
-    res.json( {
-      msg: 'post API - controllers',
-      name,
-      age  
-    } );
-}
+  //Encrypt to password
+  const salt = bcryptjs.genSaltSync();
+  user.password = bcryptjs.hashSync(password, salt);
 
-const puttUsers = ( req = request, res = response ) => {
+  //Save on DDBB
+  await user.save();
 
+  res.json({
+    user
+  });
+};
+
+//PUT USER
+const puttUsers = async (req = request, res = response) => {
+  const { id } = req.params;
+  const { _id, password, google, email, ...rest } = req.body;
+
+  //TODO: validar contra DDBB
+  if (password) {
+    //Encrypt to password
+    const salt = bcryptjs.genSaltSync();
+    rest.password = bcryptjs.hashSync(password, salt);
+  }
+
+  const user = await User.findByIdAndUpdate(id, rest);
+  res.json({
+    user
+  });
+};
+
+//DELETE USER
+const deletetUsers = async(req = request, res = response) => {
     const { id } = req.params;
+    const user = await User.findByIdAndUpdate( id, { state: false} );
+    res.json( user );
+};
 
-    res.json( { 
-        msg: 'put API - controllers',
-        id
-    } )
-}
-
-const deletetUsers = ( req = request, res = response ) => {
-    res.json( { 
-        msg: 'delete API - controllers'
-    } )
-}
-
-const patchUsers = ( req = request, res = response ) => {
-    res.json( { 
-        msg: 'patch API - controllers'
-    } )
-}
+//PATCH USER
+const patchUsers = (req = request, res = response) => {
+  res.json({
+    msg: "patch API - controllers"
+  });
+};
 
 module.exports = {
-    getUsers,
-    postUsers,
-    puttUsers,
-    deletetUsers,
-    patchUsers
-}
+  getUsers,
+  postUsers,
+  puttUsers,
+  deletetUsers,
+  patchUsers
+};
