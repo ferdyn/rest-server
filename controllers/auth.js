@@ -2,7 +2,11 @@ const { request, response } = require("express");
 const bcryptjs = require("bcryptjs");
 
 const User = require("../models/user");
-const { generateJWT } = require("../helpers/generate-jwt");
+
+const {
+ generateJWT,
+ googleVerify
+} = require('../helpers');
 
 const login = async(req = request, res = response) => {
 
@@ -32,7 +36,6 @@ const login = async(req = request, res = response) => {
             });
         }
 
-
         //Generate JWT
         const token = await generateJWT( user.id );
 
@@ -50,6 +53,28 @@ const login = async(req = request, res = response) => {
 
 }
 
+const googleSignIn = async( req, res = response ) => {
+
+    const { id_token } = req.body;
+
+    try {
+        const googleUser = await googleVerify( id_token );
+        console.log(googleUser);
+
+        res.json({
+            msg: `Todo bien!`,
+            id_token
+        })
+    } catch (error) {
+        res.status(400).json({
+            ok: false,
+            msg: 'El Token no se pudo verificar'
+        });
+    }
+
+}
+
 module.exports = {
-    login
+    login,
+    googleSignIn
 }

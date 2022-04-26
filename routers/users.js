@@ -6,11 +6,11 @@ const router = Router();
 const { isRoleExist,
     isEmailExist,
     isIdExist 
-} = require('../helpers/db-validators');
+} = require('../helpers');
 
 const { validateJWT,
     validateFields,
-    isValidRole,
+    //isValidRole,
     isRoles
 } = require('../middlewares');
 
@@ -19,7 +19,7 @@ const { getUsers,
     puttUsers,
     deletetUsers,
     patchUsers 
-} = require('../controllers/users');
+} = require('../controllers');
 
 //GET ROUTER
 router.get('/', getUsers);
