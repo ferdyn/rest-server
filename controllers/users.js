@@ -57,8 +57,11 @@ const puttUsers = async (req = request, res = response) => {
 //DELETE USER
 const deletetUsers = async(req = request, res = response) => {
     const { id } = req.params;
+    
+    //const uid = req.uid;
+
     const user = await User.findByIdAndUpdate( id, { state: false} );
-    res.json( user );
+    res.json( { user } );
 };
 
 //PATCH USER

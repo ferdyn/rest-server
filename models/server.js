@@ -8,6 +8,7 @@ class Server {
         this.app      = express();
         this.port     = process.env.PORT;
         this.userPath = '/api/users';
+        this.authPath = '/api/auth';
         
         //Conecte to DDBB
         this.conectDB();
@@ -38,6 +39,7 @@ class Server {
     }
 
     routers() {
+        this.app.use( this.authPath, require('../routers/auth') );
         this.app.use( this.userPath, require('../routers/users') );
     }
 
