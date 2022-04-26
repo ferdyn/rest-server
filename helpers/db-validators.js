@@ -29,4 +29,4 @@ module.exports = {
   isRoleExist,
   isEmailExist,
   isIdExist
-};
+}
