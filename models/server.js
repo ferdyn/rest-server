@@ -7,8 +7,11 @@ class Server {
     constructor () {
         this.app      = express();
         this.port     = process.env.PORT;
-        this.userPath = '/api/users';
-        this.authPath = '/api/auth';
+        this.paths    = {
+            auth:     '/api/auth',
+            category: '/api/categories',
+            users:    '/api/users',
+        }
         
         //Conecte to DDBB
         this.conectDB();
@@ -39,8 +42,9 @@ class Server {
     }
 
     routers() {
-        this.app.use( this.authPath, require('../routers/auth') );
-        this.app.use( this.userPath, require('../routers/users') );
+        this.app.use( this.paths.auth, require('../routers/auth') );
+        this.app.use( this.paths.category, require('../routers/categories'));
+        this.app.use( this.paths.users, require('../routers/users') );
     }
 
     listen() {

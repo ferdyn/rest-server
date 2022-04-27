@@ -41,7 +41,6 @@ const puttUsers = async (req = request, res = response) => {
   const { id } = req.params;
   const { _id, password, google, email, ...rest } = req.body;
 
-  //TODO: validar contra DDBB
   if (password) {
     //Encrypt to password
     const salt = bcryptjs.genSaltSync();
