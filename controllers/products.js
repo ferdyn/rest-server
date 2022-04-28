@@ -17,7 +17,7 @@ const getProducts = async (req, res = response) => {
 
   res.json({
     total,
-    ...products
+    products
   });
 };
 
@@ -42,9 +42,9 @@ const getProduct = async (req, res = response) => {
 
 //POST CONTROLLER
 const postProduct = async (req, res = response) => {
-  const { name, categorie, price, description } = req.body;
+  const { user, state, name,categorie, ...body } = req.body;
 
-  const productDB = await Product.findOne({ name });
+  const productDB = await Product.findOne({ name: name.toUpperCase() });
 
   if (productDB) {
     return res.status(400).json({
@@ -52,19 +52,19 @@ const postProduct = async (req, res = response) => {
     });
   }
 
+
   const categorieDB = await Categorie.findById(categorie);
   if (!categorieDB) {
     return res.status(400).json({
-      msg: `The categorie ${name}, is not exist`
+      msg: `The categorie ${categorie}, is not exist`
     });
   }
 
   const data = {
-    name,
+    name: name.toUpperCase(),
     user: req.user._id,
     categorie,
-    price,
-    description
+    body,
   };
 
   const product = new Product(data);

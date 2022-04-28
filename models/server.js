@@ -12,6 +12,7 @@ class Server {
             categories: '/api/categories',
             products:   '/api/products',
             users:      '/api/users',
+            search:     '/api/search',
         }
         
         //Conecte to DDBB
@@ -47,6 +48,7 @@ class Server {
         this.app.use( this.paths.categories, require('../routers/categories'));
         this.app.use( this.paths.products, require('../routers/products'));
         this.app.use( this.paths.users, require('../routers/users') );
+        this.app.use( this.paths.search, require('../routers/search') );
     }
 
     listen() {
