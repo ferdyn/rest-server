@@ -24,7 +24,7 @@ const getCategories = async (req, res = response) => {
 const getCategorie = async (req, res = response) => {
   const { id } = req.params;
 
-  const categorieDB = await Categorie.findById(id).populate('name', 'name');
+  const categorieDB = await Categorie.findById(id).populate('user', 'name');
 
   if (!categorieDB.state) {
     return res.status(401).json({

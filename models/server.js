@@ -8,9 +8,10 @@ class Server {
         this.app      = express();
         this.port     = process.env.PORT;
         this.paths    = {
-            auth:     '/api/auth',
-            category: '/api/categories',
-            users:    '/api/users',
+            auth:       '/api/auth',
+            categories: '/api/categories',
+            products:   '/api/products',
+            users:      '/api/users',
         }
         
         //Conecte to DDBB
@@ -43,7 +44,8 @@ class Server {
 
     routers() {
         this.app.use( this.paths.auth, require('../routers/auth') );
-        this.app.use( this.paths.category, require('../routers/categories'));
+        this.app.use( this.paths.categories, require('../routers/categories'));
+        this.app.use( this.paths.products, require('../routers/products'));
         this.app.use( this.paths.users, require('../routers/users') );
     }
 
