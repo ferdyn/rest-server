@@ -1,11 +1,9 @@
-const { Router } = require("express");
-const { check }  = require('express-validator');
+const { Router } = require('express')
 
-const { searchAll } = require("../controllers");
-const { validateFields } = require("../middlewares");
+const { searchAll } = require('../controllers')
 
-const router = Router();
+const router = Router()
 
-router.get('/:colletion/:term', searchAll);
+router.get('/:colletion/:term', searchAll)
 
-module.exports = router;
+module.exports = router

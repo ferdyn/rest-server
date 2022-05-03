@@ -1,64 +1,57 @@
-const express = require('express');
-const cors    = require('cors');
-const { dbConnection } = require('../database/config');
+const express = require('express')
+const cors = require('cors')
+const { dbConnection } = require('../database/config')
 
 class Server {
-
-    constructor () {
-        this.app      = express();
-        this.port     = process.env.PORT;
-        this.paths    = {
-            auth:       '/api/auth',
-            categories: '/api/categories',
-            products:   '/api/products',
-            users:      '/api/users',
-            search:     '/api/search',
-        }
-        
-        //Conecte to DDBB
-        this.conectDB();
-
-        //Middlewares
-        this.middlewares();
-
-        //Router of app
-        this.routers();
-
+  constructor () {
+    this.app = express()
+    this.port = process.env.PORT
+    this.paths = {
+      auth: '/api/auth',
+      categories: '/api/categories',
+      products: '/api/products',
+      users: '/api/users',
+      search: '/api/search'
     }
 
-    async conectDB() {
-        await dbConnection();
-    }
+    // Conecte to DDBB
+    this.conectDB()
 
-    middlewares() {
+    // Middlewares
+    this.middlewares()
 
-        //CORS
-        this.app.use( cors() );
+    // Router of app
+    this.routers()
+  }
 
-        //Read y whirte of body
-        this.app.use( express.json() );
+  async conectDB () {
+    await dbConnection()
+  }
 
-        //Dir public
-        this.app.use( express.static('public') );
+  middlewares () {
+    // CORS
+    this.app.use(cors())
 
-    }
+    // Read y whirte of body
+    this.app.use(express.json())
 
-    routers() {
-        this.app.use( this.paths.auth, require('../routers/auth') );
-        this.app.use( this.paths.categories, require('../routers/categories'));
-        this.app.use( this.paths.products, require('../routers/products'));
-        this.app.use( this.paths.users, require('../routers/users') );
-        this.app.use( this.paths.search, require('../routers/search') );
-    }
+    // Dir public
+    this.app.use(express.static('public'))
+  }
 
-    listen() {
+  routers () {
+    this.app.use(this.paths.auth, require('../routers/auth'))
+    this.app.use(this.paths.categories, require('../routers/categories'))
+    this.app.use(this.paths.products, require('../routers/products'))
+    this.app.use(this.paths.users, require('../routers/users'))
+    this.app.use(this.paths.search, require('../routers/search'))
+  }
 
-        this.app.listen( this.port, () => {
-            console.log('Server runing on port ', this.port);
-        })
-
-    }
-
+  listen () {
+    this.app.listen(this.port, () => {
+      console.log('Server runing on port ', this.port)
+    })
+  }
 }
 
-module.exports = Server;
+module.exports = Server

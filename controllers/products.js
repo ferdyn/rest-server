@@ -1,111 +1,106 @@
-const { response } = require("express");
-const { Product, Categorie } = require("../models");
+const { response } = require('express')
+const { Product, Categorie } = require('../models')
 
-//GET CONTROLLER
+// GET CONTROLLER
 const getProducts = async (req, res = response) => {
-  const { from = 0, limit = 5 } = req.query;
-  const query = { state: true };
+  const { from = 0, limit = 5 } = req.query
+  const query = { state: true }
 
   const [total, products] = await Promise.all([
     Product.countDocuments(query),
     Product.find(query)
-      .populate("user", "name")
-      .populate("categorie", "name")
+      .populate('user', 'name')
+      .populate('categorie', 'name')
       .skip(Number(from))
       .limit(Number(limit))
-  ]);
+  ])
 
   res.json({
     total,
     products
-  });
-};
+  })
+}
 
-//GET ONE CONTROLLER
+// GET ONE CONTROLLER
 const getProduct = async (req, res = response) => {
-  const { id } = req.params;
+  const { id } = req.params
 
   const productDB = await Product.findById(id)
-    .populate("user", "name")
-    .populate("categorie", "name");
+    .populate('user', 'name')
+    .populate('categorie', 'name')
 
   if (!productDB.state) {
     return res.status(401).json({
       msg: `This ${productDB.name} product is not active `
-    });
+    })
   }
 
   res.json({
     productDB
-  });
-};
+  })
+}
 
-//POST CONTROLLER
+// POST CONTROLLER
 const postProduct = async (req, res = response) => {
-  const { user, state, name,categorie, ...body } = req.body;
+  const { user, state, name, categorie, ...body } = req.body
 
-  const productDB = await Product.findOne({ name: name.toUpperCase() });
+  const productDB = await Product.findOne({ name: name.toUpperCase() })
 
   if (productDB) {
     return res.status(400).json({
       msg: `The product ${name}, is exist`
-    });
+    })
   }
 
-
-  const categorieDB = await Categorie.findById(categorie);
+  const categorieDB = await Categorie.findById(categorie)
   if (!categorieDB) {
     return res.status(400).json({
       msg: `The categorie ${categorie}, is not exist`
-    });
+    })
   }
 
   const data = {
     name: name.toUpperCase(),
     user: req.user._id,
     categorie,
-    body,
-  };
+    body
+  }
 
-  const product = new Product(data);
+  const product = new Product(data)
 
-  //Save DB
-  await product.save();
+  // Save DB
+  await product.save()
 
-  res.status(201).json(product);
-};
+  res.status(201).json(product)
+}
 
-
-//PUT CONTROLLER
+// PUT CONTROLLER
 const putProduct = async (req, res = response) => {
-    const { id } = req.params;
-    const { state, user, categorie, ...data } = req.body;
-  
-    data.user = req.user._id;
-  
-    const product = await Product.findByIdAndUpdate(id, data, { new: true })
-        .populate( 'user', 'name')
-        .populate( 'categorie', 'name');
-  
-    res.json( product );
-  };
+  const { id } = req.params
+  const { state, user, categorie, ...data } = req.body
 
+  data.user = req.user._id
 
-//DELETE CONTROLLER
-const deleteProduct = async (req = request, res = response) => {
+  const product = await Product.findByIdAndUpdate(id, data, { new: true })
+    .populate('user', 'name')
+    .populate('categorie', 'name')
 
-    const { id } = req.params;
-    const data = {
-      state: false,
-      user: req.user._id
-    };
+  res.json(product)
+}
 
-    const product = await Product.findByIdAndUpdate(id, data, { new: true })
-                    .populate( 'user', 'name')
-                    .populate( 'categorie', 'name');
-    res.json(product);
-  };
+// DELETE CONTROLLER
+const deleteProduct = async (req, res = response) => {
+  const { id } = req.params
+  const data = {
+    state: false,
+    user: req.user._id
+  }
 
+  const product = await Product.findByIdAndUpdate(id, data, { new: true })
+    .populate('user', 'name')
+    .populate('categorie', 'name')
+  res.json(product)
+}
 
 module.exports = {
   getProducts,
@@ -113,4 +108,4 @@ module.exports = {
   postProduct,
   putProduct,
   deleteProduct
-};
+}

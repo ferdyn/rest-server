@@ -1,20 +1,16 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 
-const dbConnection = async() => {
+const dbConnection = async () => {
+  try {
+    await mongoose.connect(process.env.MONGODB_CNN)
 
-    try {
-        
-        await mongoose.connect( process.env.MONGODB_CNN );
-
-        console.log('DDBB conected!!!');
-
-    } catch (error) {
-        console.log(error);
-        throw new Error('Error to conected to DDBB');
-    }
-
+    console.log('DDBB conected!!!')
+  } catch (error) {
+    console.log(error)
+    throw new Error('Error to conected to DDBB')
+  }
 }
 
 module.exports = {
-    dbConnection
+  dbConnection
 }

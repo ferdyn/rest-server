@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "nod": "nodemon app.js"
   },
   "keywords": [],
   "author": "",
@@ -20,5 +21,11 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.3.1",
     "nodemon": "^2.0.15"
+  },
+  "devDependencies": {
+    "standard": "^17.0.0"
+  },
+  "eslintConfig": {
+    "extends": "./node_modules/standard/eslintrc.json"
   }
 }
