@@ -1,4 +1,5 @@
 const express = require('express')
+const fileUpload = require('express-fileupload')
 const cors = require('cors')
 const { dbConnection } = require('../database/config')
 
@@ -11,7 +12,8 @@ class Server {
       categories: '/api/categories',
       products: '/api/products',
       users: '/api/users',
-      search: '/api/search'
+      search: '/api/search',
+      uploads: '/api/uploads'
     }
 
     // Conecte to DDBB
@@ -37,6 +39,15 @@ class Server {
 
     // Dir public
     this.app.use(express.static('public'))
+
+    // Upload file to server
+    this.app.use(
+      fileUpload({
+        useTempFiles: true,
+        tempFileDir: '/tmp/',
+        createParentPath: true
+      })
+    )
   }
 
   routers () {
@@ -45,6 +56,7 @@ class Server {
     this.app.use(this.paths.products, require('../routers/products'))
     this.app.use(this.paths.users, require('../routers/users'))
     this.app.use(this.paths.search, require('../routers/search'))
+    this.app.use(this.paths.uploads, require('../routers/uploads'))
   }
 
   listen () {

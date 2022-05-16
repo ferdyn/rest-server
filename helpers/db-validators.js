@@ -40,10 +40,20 @@ const isIdProductExist = async id => {
   }
 }
 
+// Valid colection to update file
+const isColectionValid = async (colection = '', colections = []) => {
+  if (!colections.includes(colection)) {
+    throw new Error(
+      `This colection: ${colection} is not exist, try the (${colections})`
+    )
+  }
+}
+
 module.exports = {
   isRoleExist,
   isEmailExist,
   isIdExist,
   isIdCategorieExist,
-  isIdProductExist
+  isIdProductExist,
+  isColectionValid
 }
